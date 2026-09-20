@@ -30,5 +30,4 @@ bin/
 *.iml
 .idea/
 .DS_Store
-.lib
 **/application.properties

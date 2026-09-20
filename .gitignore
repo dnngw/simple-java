@@ -27,6 +27,7 @@ bin/
 .vscode/
 
 *.jar
+!lib/*.jar
 *.iml
 .idea/
 .DS_Store

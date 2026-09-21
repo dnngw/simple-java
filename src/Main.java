@@ -21,10 +21,10 @@ public class Main {
         try {
             MigrationRunner.run(connection);
         }catch(SQLException e) {
-            System.out.println(e);
+            System.out.println("Failed to running the migration " + e);
 
         }catch(IOException e) {
-            System.out.println(e);
+            System.out.println("Migration file not found" + e);
         }
 
         /*
@@ -57,63 +57,98 @@ public class Main {
                 Task task = new Task();
 
                 switch(value) {
+                    // Input Task
                     case 1:
                         System.out.print("Input new task : ");
                         task.setValue(scanner.nextLine());
-                        service.addTask(task);
+                        try{
+                            long result = service.addTask(task);
+                            task.setId(result);
+                            System.out.println("data input successfully " + task);
+                        }catch(Exception e) {
+                            System.out.println("Failed to insert data" + e);
+                        }
 
                         break;
 
+                    // Get all task
                     case 2:
                         System.out.println("List of task");
-                        for(Task data : service.getAllTask()) {
+                        try{
+                            for(Task data : service.getAllTask()) {
                                 System.out.print("id : " + data.getId() + " ");
                                 System.out.println("task : " + data.getValue());
+                            }
+                        }catch (Exception e) {
+                            System.out.println("Failed to retrive data" + e);
                         }
+
                         break;
 
+                     // Update task
                     case 3:
                         System.out.print("input task id : ");
-                        task.setId(scanner.nextInt());
+                        String inputId = scanner.nextLine();
 
-                        scanner.nextLine();
+                        try {
+                            long convertValue = Long.parseLong(inputId);
+                            task.setId(convertValue);
+
+                        }catch(NumberFormatException e) {
+                            System.out.println("Input invalid " + e.getMessage());
+                            continue;
+                        }
+
 
                         System.out.print("input new value : ");
                         task.setValue(scanner.nextLine());
 
                         try{
-                            service.updateTask(task);
+                            int result = service.updateTask(task);
+                            System.out.println("Rows affected " + result);
+
                         }catch(Exception e) {
                             System.out.println(e);
                         }
 
                         break;
 
+                    // Delete task
                     case 4:
                         System.out.print("input task id :");
-                        task.setId(scanner.nextInt());
+                        String deleteId = scanner.nextLine();
+
+                        try{
+                            long convertDeleteId = Long.parseLong(deleteId);
+                            task.setId(convertDeleteId);
+                        }catch(NumberFormatException e) {
+                            System.out.println("Invalid input " + e.getMessage());
+                            continue;
+                        }
 
                         try {
-                            service.deleteTask(task.getId());
+                            int result =service.deleteTask(task.getId());
+                            System.out.println("Rows affected " + result);
+
                         }catch(Exception e) {
                             System.out.println(e);
                         }
 
-                        scanner.nextLine();
-
                         break;
 
+                    // Close program
                     case 5:
                         System.out.println("Program End!");
                         running = false;
                         break;
 
+                    // Invalid option
                     default:
                         System.out.println("Option not available!");
                 }
 
             }catch(NumberFormatException e) {
-                System.out.println("Value invalid!");
+                System.out.println("Value invalid " + e.getMessage());
             }
 
         }

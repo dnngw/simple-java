@@ -3,10 +3,7 @@ package dao.impl;
 import dao.TaskDAO;
 import model.Task;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,14 +48,14 @@ public class TaskJdbcDAO implements TaskDAO {
     }
 
     @Override
-    public Task findById(int id) {
+    public Task findById(long id) {
         String findByIdQuery = "SELECT * FROM Task WHERE id = ?";
 
         Task data = new Task();
 
         try(PreparedStatement statement = connection.prepareStatement(findByIdQuery)) {
 
-            statement.setInt(1, id);
+            statement.setLong(1, id);
 
             ResultSet result = statement.executeQuery();
 
@@ -78,49 +75,59 @@ public class TaskJdbcDAO implements TaskDAO {
     }
 
     @Override
-    public void insert(Task task) {
+    public long insert(Task task) {
 
         String createQuery = "INSERT INTO Task (value) VALUES (?)";
 
-        try(PreparedStatement statement = connection.prepareStatement(createQuery)) {
+        try(PreparedStatement statement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, task.getValue());
 
-            statement.executeUpdate();
+            int rowsAffected = statement.executeUpdate();
 
-            System.out.println("Insert data succesfully");
+            if(rowsAffected == 0 ) {
+                throw new SQLException("Failed to insert the data!");
+            }
+
+            try(ResultSet result = statement.getGeneratedKeys()) {
+                if(result.next()) {
+                    return result.getLong(1);
+                } else {
+                    throw new SQLException("Insert failed, ID cannot be generated");
+                }
+            }
 
         }catch(SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed insert task", e);
         }
     }
 
     @Override
-    public void update(Task task) {
+    public int update(Task task) {
 
         Task currentData = findById(task.getId());
 
         if(currentData == null) {
-            throw new RuntimeException("Task with id : " + task.getId() + "not found");
+            throw new RuntimeException("Task with id : " + task.getId() + " not found");
         }
 
         String updateQuery = "UPDATE Task SET value = ? WHERE id = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.setString(1, task.getValue());
-            statement.setInt(2, task.getId());
+            statement.setLong(2, task.getId());
 
-            statement.executeUpdate();
+            int rowsAffected = statement.executeUpdate();
 
-            System.out.print("Data succesfully updated");
+            return rowsAffected;
 
         }catch(SQLException e) {
-            System.out.println("Data not found");
+            throw new RuntimeException("Failed to update task", e);
         }
     }
 
     @Override
-    public void delete(int id) {
+    public int delete(long id) {
 
         Task checkData = findById(id);
 
@@ -132,13 +139,13 @@ public class TaskJdbcDAO implements TaskDAO {
 
         try(PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
 
-            statement.setInt(1, id);
-            statement.executeUpdate();
+            statement.setLong(1, id);
+            int rowsAffected = statement.executeUpdate();
 
-            System.out.println("Data succesfully deleted");
+            return rowsAffected;
 
         }catch(SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to delete task", e);
         }
 
     }

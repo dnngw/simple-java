@@ -38,8 +38,15 @@ public class TaskServiceImpl implements TaskService {
     * @param task Task
     * @return void
     * */
-    public void addTask(Task task) {
-        dao.insert(task);
+    public long addTask(Task task) {
+
+        long result = dao.insert(task);
+
+        if (result == 0) {
+         throw new RuntimeException("Data failed to insert");
+        }
+
+        return result;
     }
 
 
@@ -49,8 +56,15 @@ public class TaskServiceImpl implements TaskService {
     * @param task Task
     * @return void
     * */
-    public void updateTask(Task task) {
-        dao.update(task);
+    public int updateTask(Task task) {
+
+        int result = dao.update(task);
+
+        if(result == 0){
+            throw new RuntimeException("Data failed to update");
+        }
+
+        return result;
     }
 
 
@@ -60,8 +74,15 @@ public class TaskServiceImpl implements TaskService {
     * @param id Id
     * @return void
     * */
-    public void deleteTask(int id) {
-        dao.delete(id);
+    public int deleteTask(long id) {
+
+        int result = dao.delete(id);
+
+        if(result == 0) {
+            throw new RuntimeException("Failed to delete the data");
+        }
+
+        return result;
     }
 
 }

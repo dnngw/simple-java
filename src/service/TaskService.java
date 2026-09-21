@@ -21,7 +21,7 @@ public interface TaskService {
     * @param task Task
     * @return void
     * */
-    void addTask(Task task);
+    long addTask(Task task);
 
     /*
     * Update task
@@ -30,7 +30,7 @@ public interface TaskService {
     * @return void
     *
     * */
-    void updateTask(Task task);
+    int updateTask(Task task);
 
     /*
     * Delete task
@@ -38,6 +38,6 @@ public interface TaskService {
     * @param id Id
     * @return void
     * */
-    void deleteTask(int id);
+    int deleteTask(long id);
 
 }

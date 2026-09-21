@@ -21,27 +21,27 @@ public interface TaskDAO {
     *
     * @return task
     * */
-    Task findById(int id);
+    Task findById(long id);
 
     /*
     * Insert new task
     *
     * @param task
     * */
-    void insert(Task task);
+    long insert(Task task);
 
     /*
     * Update specifict task
     *
     * @param task
     * */
-    void update (Task task);
+    int update (Task task);
 
     /*
     * delete task by id
     *
     * @param id
     * */
-    void delete(int id);
+    int delete(long id);
 
 }

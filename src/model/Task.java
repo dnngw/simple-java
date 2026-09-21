@@ -8,7 +8,7 @@ public class Task {
     /*
     * id
     * */
-    private int id;
+    private Long id;
 
     /*
     * value
@@ -27,7 +27,7 @@ public class Task {
     * @param id Id
     * @param value Value
     * */
-    public Task(int id, String value) {
+    public Task(long id, String value) {
         this.id = id;
         this.value = value;
     }
@@ -37,7 +37,7 @@ public class Task {
     *
     * @return id
     * */
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -46,7 +46,7 @@ public class Task {
     *
     * @param id Id
     * */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

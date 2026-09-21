@@ -7,6 +7,7 @@ import db.MigrationRunner;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 /*
@@ -74,14 +75,21 @@ public class Main {
                     // Get all task
                     case 2:
                         System.out.println("List of task");
-                        try{
-                            for(Task data : service.getAllTask()) {
-                                System.out.print("id : " + data.getId() + " ");
-                                System.out.println("task : " + data.getValue());
+                        List<Task> allTask = service.getAllTask();
+
+                        if(allTask.isEmpty()) {
+                            System.out.println("Data still empthy");
+                        }else {
+                            try{
+                                for(Task data : service.getAllTask()) {
+                                    System.out.print("id : " + data.getId() + " ");
+                                    System.out.println("task : " + data.getValue());
+                                }
+                            }catch (Exception e) {
+                                System.out.println("Failed to retrive data" + e);
                             }
-                        }catch (Exception e) {
-                            System.out.println("Failed to retrive data" + e);
                         }
+
 
                         break;
 

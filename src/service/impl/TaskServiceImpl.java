@@ -29,6 +29,7 @@ public class TaskServiceImpl implements TaskService {
     * @return Task
     * */
     public List<Task> getAllTask() {
+
         return dao.findAll();
     }
 

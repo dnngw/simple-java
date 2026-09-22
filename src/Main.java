@@ -146,8 +146,19 @@ public class Main {
 
                     // Close program
                     case 5:
+                        scanner.close();
+
+                        try {
+                            if(connection != null && !connection.isClosed()) {
+                                connection.close();
+                            }
+                        }catch (SQLException e){
+                            System.out.println("Failed to close the database" + e);
+                        }
+
                         System.out.println("Program End!");
                         running = false;
+
                         break;
 
                     // Invalid option
